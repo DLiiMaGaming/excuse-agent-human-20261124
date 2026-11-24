@@ -26,6 +26,17 @@ ENTRY = (
 
 
 def main() -> None:
+    # Gate check BEFORE writing: the entry must already satisfy the
+    # competition rules (1-200 characters, one line, no trailing
+    # newline) — fail fast instead of writing a bad file and noticing
+    # afterwards. The irony of the excuse itself: the agent freed
+    # memory to remember the deadline, then forgot the deadline —
+    # so this check makes sure the program never forgets its own gate.
+    assert 1 <= len(ENTRY) <= 200, "entry must be 1-200 characters"
+    assert "\n" not in ENTRY, "entry must be a single line"
+    assert not ENTRY.endswith("\n"), "entry must have no trailing newline"
+    assert ENTRY.strip(), "entry must not be only whitespace"
+
     out_dir = Path(os.environ.get("OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "entry.txt"
